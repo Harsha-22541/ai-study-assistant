@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Study Assistant</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-logo">🎓</div><div><b>AI Study</b><small>Smart Learning Assistant</small></div></div>
+    <nav id="nav">
+      <button class="nav-btn active" data-page="dashboard">🏠 Dashboard</button>
+      <button class="nav-btn" data-page="documents">📚 Documents</button>
+      <button class="nav-btn" data-page="chat">💬 AI Chat</button>
+      <button class="nav-btn" data-page="summary">📝 Summarizer</button>
+      <button class="nav-btn" data-page="quiz">🧠 MCQ Generator</button>
+      <button class="nav-btn" data-page="questions">❓ Important Questions</button>
+      <button class="nav-btn" data-page="flashcards">🃏 Flashcards</button>
+      <button class="nav-btn" data-page="notes">📒 Study Notes</button>
+      <button class="nav-btn" data-page="simple">💡 Explain Simply</button>
+      <button class="nav-btn" data-page="planner">📅 Study Planner</button>
+    </nav>
+    <div class="side-status"><span></span> Backend connected when running</div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div><h1 id="title">Dashboard</h1><p id="subtitle">Your personal AI-powered study workspace</p></div>
+      <button class="primary" onclick="openPage('documents')">＋ Upload Material</button>
+    </header>
+
+    <section class="page active" id="dashboard">
+      <div class="hero">
+        <div>
+          <div class="eyebrow">AI FOR GENERATION & AUTOMATION</div>
+          <h2>Study smarter, not harder.</h2>
+          <p>Upload notes and use AI to ask questions, summarize material, generate quizzes, create revision notes and plan your preparation.</p>
+          <button class="primary" onclick="openPage('documents')">Get Started →</button>
+        </div>
+        <div class="hero-art">🧠</div>
+      </div>
+      <div class="stats">
+        <div class="stat"><span>📚</span><b id="documents-stat">0</b><small>Documents</small></div>
+        <div class="stat"><span>💬</span><b id="questions-stat">0</b><small>Questions Asked</small></div>
+        <div class="stat"><span>🧠</span><b id="quizzes-stat">0</b><small>Quizzes Completed</small></div>
+        <div class="stat"><span>📈</span><b id="score-stat">0%</b><small>Average Quiz Score</small></div>
+      </div>
+      <h3 class="section-heading">Quick Actions</h3>
+      <div class="quick-grid">
+        <button class="quick" onclick="openPage('chat')"><b>💬 Ask AI</b><span>Ask questions from your documents</span></button>
+        <button class="quick" onclick="openPage('summary')"><b>📝 Summarize</b><span>Create quick revision summaries</span></button>
+        <button class="quick" onclick="openPage('quiz')"><b>🧠 Practice</b><span>Generate MCQs and test yourself</span></button>
+        <button class="quick" onclick="openPage('planner')"><b>📅 Plan</b><span>Create a personalized schedule</span></button>
+      </div>
+    </section>
+
+    <section class="page" id="documents">
+      <div class="panel">
+        <h2>📚 Study Documents</h2>
+        <p class="muted">Upload PDF, DOCX or TXT files. The backend extracts, chunks and indexes the content.</p>
+        <div id="dropzone" class="dropzone">
+          <div class="drop-icon">☁️</div><h3>Drop files here</h3><p>or choose files from your computer</p>
+          <input id="file-input" type="file" multiple accept=".pdf,.docx,.txt">
+          <label for="file-input" class="primary file-label">Choose Files</label>
+        </div>
+        <div id="file-preview"></div>
+        <button id="upload-btn" class="primary hidden">Process Documents</button>
+        <div id="upload-result"></div>
+        <h3>Uploaded Documents</h3>
+        <div id="documents-list" class="list"></div>
+      </div>
+    </section>
+
+    <section class="page" id="chat">
+      <div class="panel chat-panel">
+        <div class="panel-head"><div><h2>💬 AI Document Chat</h2><p class="muted">Answers are grounded in your indexed study material.</p></div><button class="secondary" onclick="clearChat()">Clear Chat</button></div>
+        <div id="chat-box" class="chat-box"><div class="bubble ai"><b>AI Assistant</b><p>Upload study material and ask a question.</p></div></div>
+        <form id="chat-form" class="chat-form"><input id="chat-input" placeholder="Ask a question..." autocomplete="off"><button class="primary">Send</button></form>
+      </div>
+    </section>
+
+    <section class="page" id="summary">
+      <div class="panel"><h2>📝 AI Summarizer</h2>
+        <div class="controls"><label>Summary Type<select id="summary-type"><option>Short</option><option>Detailed</option><option>Unit-wise</option><option>Important points</option></select></label><button class="primary" onclick="generateSummary()">Generate Summary</button></div>
+        <div id="summary-output" class="output">Your summary will appear here.</div>
+      </div>
+    </section>
+
+    <section class="page" id="quiz">
+      <div class="panel"><h2>🧠 MCQ Generator</h2>
+        <div class="grid2"><label>Number of questions<select id="quiz-count"><option>5</option><option>10</option><option>20</option></select></label><label>Difficulty<select id="quiz-difficulty"><option>Easy</option><option>Medium</option><option>Hard</option></select></label></div>
+        <button class="primary" onclick="generateQuiz()">Generate MCQs</button>
+        <div id="quiz-output"></div>
+      </div>
+    </section>
+
+    <section class="page" id="questions">
+      <div class="panel"><h2>❓ Important Exam Questions</h2><p class="muted">Generate 2-mark, 5-mark and 10-mark questions from uploaded material.</p>
+        <button class="primary" onclick="generateQuestions()">Generate Questions</button>
+        <div id="questions-output" class="output"></div>
+      </div>
+    </section>
+
+    <section class="page" id="flashcards">
+      <div class="panel"><h2>🃏 Flashcards</h2><button class="primary" onclick="generateFlashcards()">Generate Flashcards</button><div id="flashcards-output" class="flashcards"><div class="card">Generate flashcards to begin.</div></div></div>
+    </section>
+
+    <section class="page" id="notes">
+      <div class="panel"><h2>📒 Study Notes</h2><button class="primary" onclick="generateNotes()">Generate Revision Notes</button><div id="notes-output" class="output"></div></div>
+    </section>
+
+    <section class="page" id="simple">
+      <div class="panel"><h2>💡 Explain Simply</h2><textarea id="simple-text" placeholder="Paste a difficult concept or paragraph..."></textarea>
+        <div class="controls"><label>Level<select id="simple-level"><option>Beginner</option><option>School level</option><option>B.Tech level</option></select></label><button class="primary" onclick="explainSimply()">Explain</button></div>
+        <div id="simple-output" class="output"></div>
+      </div>
+    </section>
+
+    <section class="page" id="planner">
+      <div class="panel"><h2>📅 Study Planner</h2>
+        <div class="grid2">
+          <label>Subject<input id="plan-subject" placeholder="Artificial Intelligence"></label>
+          <label>Number of Units<input id="plan-units" type="number" min="1" value="5"></label>
+          <label>Available Days<input id="plan-days" type="number" min="1" value="14"></label>
+          <label>Hours per Day<input id="plan-hours" type="number" min="1" step=".5" value="3"></label>
+          <label>Exam Date<input id="plan-date" type="date"></label>
+        </div>
+        <button class="primary" onclick="generatePlan()">Generate Study Plan</button><div id="plan-output" class="output"></div>
+      </div>
+    </section>
+  </main>
+</div>
+<div id="toast" class="toast"></div>
+<script src="script.js"></script>
+</body>
+</html>
