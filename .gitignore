@@ -1,0 +1,8 @@
+.env
+__pycache__/
+*.pyc
+backend/study_assistant.db
+backend/data/uploads/*
+backend/data/vectorstore/*
+!backend/data/uploads/.gitkeep
+!backend/data/vectorstore/.gitkeep
